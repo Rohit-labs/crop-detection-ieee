@@ -91,6 +91,34 @@ def get_confidence_level(confidence):
         return "Low"
 
 
+def normalize_disease_label(label):
+    """
+    Normalize disease label to match database format
+    Converts 'Tomato Bacterial spot' to 'Tomato___Bacterial_spot'
+    
+    Args:
+        label: Raw label from model (e.g., "Tomato Bacterial spot")
+    
+    Returns:
+        str: Normalized label (e.g., "Tomato___Bacterial_spot")
+    """
+    label = label.strip()
+    
+    # If already has triple underscores, return as is
+    if "___" in label:
+        return label
+    
+    # Split on first space to separate crop from disease
+    if " " in label:
+        parts = label.split(" ", 1)
+        if len(parts) == 2:
+            crop = parts[0]
+            disease = parts[1].replace(" ", "_")
+            return f"{crop}___{disease}"
+    
+    return label
+
+
 if __name__ == "__main__":
     # Test the functions
     test_labels = [
